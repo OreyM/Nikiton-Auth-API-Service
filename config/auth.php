@@ -117,4 +117,13 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    /*
+     * TODO add comments
+     */
+    'user' => [
+        'default' => [
+            'login'     => env('USER_DEFAULT_LOGIN', ''),
+            'password'  => env('USER_DEFAULT_PASSWORD', ''),
+        ],
+    ],
 ];
