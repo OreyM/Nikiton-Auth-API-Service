@@ -6,6 +6,10 @@
 
 namespace App\Http\Controllers\Auth\Api;
 
+use App\Data\Types\TokenType;
+use App\Domain\Auth\Entity\TokenEntity;
+use App\Domain\Auth\Service\BearerTokenService;
+use App\Domain\User\Exceptions\UserNotFoundException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginApiRequest;
 use App\Models\User;
@@ -17,10 +21,12 @@ use Symfony\Component\HttpFoundation\Response;
 class LoginApiController extends Controller
 {
     private User $userModel;
+    private BearerTokenService $tokenService;
 
-    public function __construct(User $userModel)
+    public function __construct(User $userModel, BearerTokenService $tokenService)
     {
         $this->userModel = $userModel;
+        $this->tokenService = $tokenService;
     }
 
     /**
@@ -49,17 +55,24 @@ class LoginApiController extends Controller
             ]);
         }
 
-        $tokenData = $authUser->createToken('NIKITON token');
-        $token = $tokenData->accessToken;
-        $tokenExpire = $tokenData->token->expires_at;
+        try {
+            $token = $this->tokenService
+                ->setAuthUser($authUser)
+                ->setTokenName('Nikiton API token')
+                ->generateToken();
+        } catch (UserNotFoundException $e) {
+            return response()->json([
+                'success'   => false,
+                'code'      => Response::HTTP_NOT_FOUND,
+                'message'   => $e->getMessage(),
+            ]);
+        }
 
         return response()->json([
             'success'           => true,
             'code'              => Response::HTTP_OK,
             'message'           => 'Authentication success.',
-            'token_type'        => 'Bearer',
             'token'             => $token,
-            'token_expires_at'  => Carbon::parse($tokenExpire)->toDateTimeString()
         ]);
     }
 }
