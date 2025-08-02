@@ -44,7 +44,7 @@ class LoginApiController extends Controller
                 'success'   => false,
                 'code'      => Response::HTTP_UNPROCESSABLE_ENTITY,
                 'message'   => 'Authentication failed [2]: credentials do not match records.'
-            ]);
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         if (!$this->authService->comparePasswords(urldecode($request->password), $authUser->password)) {
@@ -52,7 +52,7 @@ class LoginApiController extends Controller
                 'success'   => false,
                 'code'      => Response::HTTP_UNPROCESSABLE_ENTITY,
                 'message'   => 'Authentication failed [3]: credentials do not match records.'
-            ]);
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         try {
@@ -65,7 +65,7 @@ class LoginApiController extends Controller
                 'success'   => false,
                 'code'      => Response::HTTP_NOT_FOUND,
                 'message'   => $e->getMessage(),
-            ]);
+            ], Response::HTTP_NOT_FOUND);
         }
 
         return response()->json([
@@ -73,6 +73,6 @@ class LoginApiController extends Controller
             'code'              => Response::HTTP_OK,
             'message'           => 'Authentication success.',
             'token'             => $token,
-        ]);
+        ], Response::HTTP_OK);
     }
 }
