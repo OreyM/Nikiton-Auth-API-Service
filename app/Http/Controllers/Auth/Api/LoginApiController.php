@@ -6,27 +6,30 @@
 
 namespace App\Http\Controllers\Auth\Api;
 
-use App\Data\Types\TokenType;
-use App\Domain\Auth\Entity\TokenEntity;
+use App\Domain\Auth\Service\AuthService;
 use App\Domain\Auth\Service\BearerTokenService;
 use App\Domain\User\Exceptions\UserNotFoundException;
+use App\Domain\User\Queries\GetUserByEmailQuery;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginApiRequest;
-use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 
 class LoginApiController extends Controller
 {
-    private User $userModel;
+    private AuthService $authService;
     private BearerTokenService $tokenService;
+    private GetUserByEmailQuery $getUserByEmailQuery;
 
-    public function __construct(User $userModel, BearerTokenService $tokenService)
+    public function __construct(
+        AuthService $authService,
+        BearerTokenService $tokenService,
+        GetUserByEmailQuery $getUserByEmailQuery
+    )
     {
-        $this->userModel = $userModel;
+        $this->authService = $authService;
         $this->tokenService = $tokenService;
+        $this->getUserByEmailQuery = $getUserByEmailQuery;
     }
 
     /**
@@ -36,22 +39,19 @@ class LoginApiController extends Controller
      */
     public function __invoke(LoginApiRequest $request): JsonResponse
     {
-        $authUser = $this->userModel->where('email', $request->email)
-            ->first();
-
-        if (!$authUser) {
+        if (!$authUser = $this->getUserByEmailQuery->handle($request->email)) {
             return response()->json([
-                'success' => false,
-                'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
-                'message' => 'Authentication failed [2]: credentials do not match records.'
+                'success'   => false,
+                'code'      => Response::HTTP_UNPROCESSABLE_ENTITY,
+                'message'   => 'Authentication failed [2]: credentials do not match records.'
             ]);
         }
 
-        if (!Hash::check(urldecode($request->password), $authUser->password)) {
+        if (!$this->authService->comparePasswords(urldecode($request->password), $authUser->password)) {
             return response()->json([
-                'success' => false,
-                'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
-                'message' => 'Authentication failed [3]: credentials do not match records.'
+                'success'   => false,
+                'code'      => Response::HTTP_UNPROCESSABLE_ENTITY,
+                'message'   => 'Authentication failed [3]: credentials do not match records.'
             ]);
         }
 
