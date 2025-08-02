@@ -23,8 +23,8 @@ class AppServiceProvider extends ServiceProvider
     {
         Passport::loadKeysFrom(storage_path('secrets/auth'));
 
-        Passport::tokensExpireIn(CarbonInterval::days(15));
-        Passport::refreshTokensExpireIn(CarbonInterval::days(30));
+        Passport::tokensExpireIn(CarbonInterval::hours(24));
+        Passport::refreshTokensExpireIn(CarbonInterval::hours(48));
         Passport::personalAccessTokensExpireIn(CarbonInterval::months(6));
     }
 }
