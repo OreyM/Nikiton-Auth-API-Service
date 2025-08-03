@@ -27,12 +27,12 @@ final class LogoutApiController extends ApiController
 
         if (! $token->revoke()) {
             return (new BadRequestResponse(
-                message: 'Logout error.'
+                message: trans('auth.logout_error')
             ))->respond();
         }
 
         return (new SuccessResponse(
-            message: 'Auth user logout successfully.'
+            message: trans('auth.logout')
         ))->respond();
     }
 }
