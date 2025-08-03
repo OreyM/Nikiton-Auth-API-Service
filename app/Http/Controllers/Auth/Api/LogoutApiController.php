@@ -6,10 +6,12 @@
 
 namespace App\Http\Controllers\Auth\Api;
 
+use App\Api\Responses\ErrorResponses\BadRequestResponse;
+use App\Api\Responses\SuccessResponses\SuccessResponse;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Laravel\Passport\AccessToken;
 
 final class LogoutApiController extends ApiController
 {
@@ -20,12 +22,17 @@ final class LogoutApiController extends ApiController
      */
     public function __invoke(Request $request): JsonResponse
     {
-        $request->user()->token()->revoke();
+        /** @var AccessToken  $token */
+        $token = $request->user()->token();
 
-        return response()->json([
-            'success' => true,
-            'code'    => Response::HTTP_OK,
-            'message' => 'Auth user logout successfully.',
-        ], Response::HTTP_OK);
+        if (! $token->revoke()) {
+            return (new BadRequestResponse(
+                message: 'Logout error.'
+            ))->respond();
+        }
+
+        return (new SuccessResponse(
+            message: 'Auth user logout successfully.'
+        ))->respond();
     }
 }

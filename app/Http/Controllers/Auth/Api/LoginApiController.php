@@ -6,6 +6,9 @@
 
 namespace App\Http\Controllers\Auth\Api;
 
+use App\Api\Responses\ErrorResponses\NotFoundResponse;
+use App\Api\Responses\ErrorResponses\UnprocessableEntityResponse;
+use App\Api\Responses\SuccessResponses\LoginSuccessResponse;
 use App\Domain\Auth\Service\AuthService;
 use App\Domain\Auth\Service\BearerTokenService;
 use App\Domain\User\Exceptions\UserNotFoundException;
@@ -13,7 +16,6 @@ use App\Domain\User\Queries\GetUserByEmailQuery;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\Auth\LoginApiRequest;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 final class LoginApiController extends ApiController
 {
@@ -40,19 +42,15 @@ final class LoginApiController extends ApiController
     public function __invoke(LoginApiRequest $request): JsonResponse
     {
         if (!$authUser = $this->getUserByEmailQuery->handle($request->email)) {
-            return response()->json([
-                'success'   => false,
-                'code'      => Response::HTTP_UNPROCESSABLE_ENTITY,
-                'message'   => 'Authentication failed [2]: credentials do not match records.'
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            return (new UnprocessableEntityResponse(
+                message: 'Authentication failed [1]: credentials do not match records.'
+            ))->respond();
         }
 
         if (!$this->authService->comparePasswords(urldecode($request->password), $authUser->password)) {
-            return response()->json([
-                'success'   => false,
-                'code'      => Response::HTTP_UNPROCESSABLE_ENTITY,
-                'message'   => 'Authentication failed [3]: credentials do not match records.'
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            return (new UnprocessableEntityResponse(
+                message: 'Authentication failed [2]: credentials do not match records.'
+            ))->respond();
         }
 
         try {
@@ -61,18 +59,14 @@ final class LoginApiController extends ApiController
                 ->setTokenName('Nikiton API token')
                 ->generateToken();
         } catch (UserNotFoundException $e) {
-            return response()->json([
-                'success'   => false,
-                'code'      => Response::HTTP_NOT_FOUND,
-                'message'   => $e->getMessage(),
-            ], Response::HTTP_NOT_FOUND);
+            return (new NotFoundResponse(
+                message: $e->getMessage()
+            ))->respond();
         }
 
-        return response()->json([
-            'success'           => true,
-            'code'              => Response::HTTP_OK,
-            'message'           => 'Authentication success.',
-            'token'             => $token,
-        ], Response::HTTP_OK);
+        return (new LoginSuccessResponse(
+            token: $token,
+            message: 'Authentication success.'
+        ))->respond();
     }
 }
