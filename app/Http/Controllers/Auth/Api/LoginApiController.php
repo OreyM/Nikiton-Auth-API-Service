@@ -6,21 +6,30 @@
 
 namespace App\Http\Controllers\Auth\Api;
 
-use App\Http\Controllers\Controller;
+use App\Domain\Auth\Service\AuthService;
+use App\Domain\Auth\Service\BearerTokenService;
+use App\Domain\User\Exceptions\UserNotFoundException;
+use App\Domain\User\Queries\GetUserByEmailQuery;
+use App\Http\Controllers\ApiController;
 use App\Http\Requests\Auth\LoginApiRequest;
-use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 
-class LoginApiController extends Controller
+final class LoginApiController extends ApiController
 {
-    private User $userModel;
+    private AuthService $authService;
+    private BearerTokenService $tokenService;
+    private GetUserByEmailQuery $getUserByEmailQuery;
 
-    public function __construct(User $userModel)
+    public function __construct(
+        AuthService $authService,
+        BearerTokenService $tokenService,
+        GetUserByEmailQuery $getUserByEmailQuery
+    )
     {
-        $this->userModel = $userModel;
+        $this->authService = $authService;
+        $this->tokenService = $tokenService;
+        $this->getUserByEmailQuery = $getUserByEmailQuery;
     }
 
     /**
@@ -30,36 +39,40 @@ class LoginApiController extends Controller
      */
     public function __invoke(LoginApiRequest $request): JsonResponse
     {
-        $authUser = $this->userModel->where('email', $request->email)
-            ->first();
-
-        if (!$authUser) {
+        if (!$authUser = $this->getUserByEmailQuery->handle($request->email)) {
             return response()->json([
-                'success' => false,
-                'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
-                'message' => 'Authentication failed [2]: credentials do not match records.'
-            ]);
+                'success'   => false,
+                'code'      => Response::HTTP_UNPROCESSABLE_ENTITY,
+                'message'   => 'Authentication failed [2]: credentials do not match records.'
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        if (!Hash::check(urldecode($request->password), $authUser->password)) {
+        if (!$this->authService->comparePasswords(urldecode($request->password), $authUser->password)) {
             return response()->json([
-                'success' => false,
-                'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
-                'message' => 'Authentication failed [3]: credentials do not match records.'
-            ]);
+                'success'   => false,
+                'code'      => Response::HTTP_UNPROCESSABLE_ENTITY,
+                'message'   => 'Authentication failed [3]: credentials do not match records.'
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $tokenData = $authUser->createToken('NIKITON token');
-        $token = $tokenData->accessToken;
-        $tokenExpire = $tokenData->token->expires_at;
+        try {
+            $token = $this->tokenService
+                ->setAuthUser($authUser)
+                ->setTokenName('Nikiton API token')
+                ->generateToken();
+        } catch (UserNotFoundException $e) {
+            return response()->json([
+                'success'   => false,
+                'code'      => Response::HTTP_NOT_FOUND,
+                'message'   => $e->getMessage(),
+            ], Response::HTTP_NOT_FOUND);
+        }
 
         return response()->json([
             'success'           => true,
             'code'              => Response::HTTP_OK,
             'message'           => 'Authentication success.',
-            'token_type'        => 'Bearer',
             'token'             => $token,
-            'token_expires_at'  => Carbon::parse($tokenExpire)->toDateTimeString()
-        ]);
+        ], Response::HTTP_OK);
     }
 }
