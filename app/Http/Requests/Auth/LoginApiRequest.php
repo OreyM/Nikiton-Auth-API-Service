@@ -35,7 +35,7 @@ class LoginApiRequest extends ApiRequest
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => 'Authentication failed [1]: credentials do not match records.',
+                'email' => trans('auth.failed'),
             ]);
         }
 
@@ -59,7 +59,7 @@ class LoginApiRequest extends ApiRequest
 
         throw ValidationException::withMessages([
             'email' => sprintf(
-                'Too many login attempts. Please try again in %s seconds.',
+                trans('auth.throttle', ['seconds' => $seconds]),
                 $seconds
             ),
         ]);

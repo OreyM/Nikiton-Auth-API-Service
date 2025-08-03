@@ -43,20 +43,20 @@ final class LoginApiController extends ApiController
     {
         if (!$authUser = $this->getUserByEmailQuery->handle($request->email)) {
             return (new UnprocessableEntityResponse(
-                message: 'Authentication failed [1]: credentials do not match records.'
+                message: trans('auth.failed')
             ))->respond();
         }
 
         if (!$this->authService->comparePasswords(urldecode($request->password), $authUser->password)) {
             return (new UnprocessableEntityResponse(
-                message: 'Authentication failed [2]: credentials do not match records.'
+                message: trans('auth.failed')
             ))->respond();
         }
 
         try {
             $token = $this->tokenService
                 ->setAuthUser($authUser)
-                ->setTokenName('Nikiton API token')
+                ->setTokenName('Nikiton API token') // TODO remove to .env or other place
                 ->generateToken();
         } catch (UserNotFoundException $e) {
             return (new NotFoundResponse(
@@ -66,7 +66,7 @@ final class LoginApiController extends ApiController
 
         return (new LoginSuccessResponse(
             token: $token,
-            message: 'Authentication success.'
+            message: trans('auth.success')
         ))->respond();
     }
 }
