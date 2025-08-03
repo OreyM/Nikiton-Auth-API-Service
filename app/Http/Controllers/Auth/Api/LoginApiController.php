@@ -6,6 +6,7 @@
 
 namespace App\Http\Controllers\Auth\Api;
 
+use App\Api\Responses\SuccessResponses\LoginSuccessResponse;
 use App\Domain\Auth\Service\AuthService;
 use App\Domain\Auth\Service\BearerTokenService;
 use App\Domain\User\Exceptions\UserNotFoundException;
@@ -68,11 +69,9 @@ final class LoginApiController extends ApiController
             ], Response::HTTP_NOT_FOUND);
         }
 
-        return response()->json([
-            'success'           => true,
-            'code'              => Response::HTTP_OK,
-            'message'           => 'Authentication success.',
-            'token'             => $token,
-        ], Response::HTTP_OK);
+        return (new LoginSuccessResponse(
+            token: $token,
+            message: 'Authentication success.'
+        ))->respond();
     }
 }
