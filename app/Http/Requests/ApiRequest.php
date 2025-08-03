@@ -18,7 +18,7 @@ class ApiRequest extends FormRequest
         $response = response()->json([
             'success' => false,
             'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
-            'message' => 'Authentication failed: validation error.',
+            'message' => 'Validation failed.',
             'errors' => $validator->errors(),
         ]);
 
