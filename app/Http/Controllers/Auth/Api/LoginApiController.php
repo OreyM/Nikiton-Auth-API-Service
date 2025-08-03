@@ -16,7 +16,6 @@ use App\Domain\User\Queries\GetUserByEmailQuery;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\Auth\LoginApiRequest;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 final class LoginApiController extends ApiController
 {
