@@ -6,6 +6,8 @@
 
 namespace App\Http\Controllers\Auth\Api;
 
+use App\Api\Responses\ErrorResponses\NotFoundResponse;
+use App\Api\Responses\ErrorResponses\UnprocessableEntityResponse;
 use App\Api\Responses\SuccessResponses\LoginSuccessResponse;
 use App\Domain\Auth\Service\AuthService;
 use App\Domain\Auth\Service\BearerTokenService;
@@ -41,19 +43,15 @@ final class LoginApiController extends ApiController
     public function __invoke(LoginApiRequest $request): JsonResponse
     {
         if (!$authUser = $this->getUserByEmailQuery->handle($request->email)) {
-            return response()->json([
-                'success'   => false,
-                'code'      => Response::HTTP_UNPROCESSABLE_ENTITY,
-                'message'   => 'Authentication failed [2]: credentials do not match records.'
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            return (new UnprocessableEntityResponse(
+                message: 'Authentication failed [1]: credentials do not match records.'
+            ))->respond();
         }
 
         if (!$this->authService->comparePasswords(urldecode($request->password), $authUser->password)) {
-            return response()->json([
-                'success'   => false,
-                'code'      => Response::HTTP_UNPROCESSABLE_ENTITY,
-                'message'   => 'Authentication failed [3]: credentials do not match records.'
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            return (new UnprocessableEntityResponse(
+                message: 'Authentication failed [2]: credentials do not match records.'
+            ))->respond();
         }
 
         try {
@@ -62,11 +60,9 @@ final class LoginApiController extends ApiController
                 ->setTokenName('Nikiton API token')
                 ->generateToken();
         } catch (UserNotFoundException $e) {
-            return response()->json([
-                'success'   => false,
-                'code'      => Response::HTTP_NOT_FOUND,
-                'message'   => $e->getMessage(),
-            ], Response::HTTP_NOT_FOUND);
+            return (new NotFoundResponse(
+                message: $e->getMessage()
+            ))->respond();
         }
 
         return (new LoginSuccessResponse(
