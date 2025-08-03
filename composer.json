@@ -58,7 +58,7 @@
         ],
         "test": [
             "@php artisan config:clear --ansi",
-            "@php artisan test"
+            "vendor/bin/phpunit --testdox --colors --stop-on-failure --coverage-html=tests/coverage"
         ]
     },
     "extra": {
