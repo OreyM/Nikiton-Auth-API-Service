@@ -10,12 +10,12 @@ use App\Domain\Auth\Service\AuthService;
 use App\Domain\Auth\Service\BearerTokenService;
 use App\Domain\User\Exceptions\UserNotFoundException;
 use App\Domain\User\Queries\GetUserByEmailQuery;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Http\Requests\Auth\LoginApiRequest;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class LoginApiController extends Controller
+final class LoginApiController extends ApiController
 {
     private AuthService $authService;
     private BearerTokenService $tokenService;

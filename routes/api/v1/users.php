@@ -13,7 +13,7 @@ Route::prefix('/users')
         Route::prefix('/user')
             ->as('user.')
             ->group(function () {
-                Route::middleware('auth:api')
+                Route::middleware(['auth:api'])
                     ->group(function () {
                         Route::get('/', function (Request $request) {
                             return $request->user();
