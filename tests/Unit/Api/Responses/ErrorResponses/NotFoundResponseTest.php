@@ -6,24 +6,24 @@
 
 namespace Tests\Unit\Api\Responses\ErrorResponses;
 
-use App\Api\Responses\ErrorResponses\BadRequestResponse;
+use App\Api\Responses\ErrorResponses\NotFoundResponse;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
-class BadRequestResponseTest extends TestCase
+class NotFoundResponseTest extends TestCase
 {
-    public function test_respond()
+    public function test_respond(): void
     {
-        $message = 'Bad Request.';
+        $message = 'Not Found';
 
-        $response = (new BadRequestResponse($message))->respond();
+        $response = (new NotFoundResponse($message))->respond();
         $data = json_decode($response->getContent(), true);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
         $this->assertFalse($data['success']);
-        $this->assertEquals(Response::HTTP_BAD_REQUEST, $data['code']);
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $data['code']);
         $this->assertEquals($message, $data['message']);
     }
 }
