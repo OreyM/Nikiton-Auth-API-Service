@@ -14,7 +14,7 @@ class NotFoundResponse implements ApiResponseInterface
 {
     private string $message;
 
-    public function __construct(string $message = 'Not Found')
+    public function __construct(string $message = 'Not Found.')
     {
         $this->message = $message;
     }
