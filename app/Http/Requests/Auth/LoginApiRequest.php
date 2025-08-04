@@ -17,7 +17,7 @@ use Illuminate\Validation\ValidationException;
  * @property string $email
  * @property string $password
  */
-class LoginApiRequest extends ApiRequest
+final class LoginApiRequest extends ApiRequest
 {
     public function rules(): array
     {

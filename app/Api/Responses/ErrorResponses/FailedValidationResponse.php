@@ -10,7 +10,7 @@ use App\Api\Responses\ApiResponseInterface;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class FailedValidationResponse implements ApiResponseInterface
+final class FailedValidationResponse implements ApiResponseInterface
 {
     private string $message;
     private array $errors;

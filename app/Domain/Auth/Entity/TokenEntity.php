@@ -8,7 +8,7 @@ namespace App\Domain\Auth\Entity;
 
 use Carbon\Carbon;
 
-readonly class TokenEntity
+final readonly class TokenEntity
 {
     public string $type;
     public string $value;

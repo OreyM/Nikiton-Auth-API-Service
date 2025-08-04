@@ -6,7 +6,7 @@
 
 namespace App\Domain\Auth\Service;
 
-class AuthService
+final class AuthService
 {
     public function comparePasswords(string $password, string $hashedPassword): bool
     {

@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * Ensures that the API always returns a response in JSON format, regardless of the request headers.
  */
-class ApiForceJsonResponse
+final class ApiForceJsonResponse
 {
     /**
      * Handle an incoming request.

@@ -10,7 +10,7 @@ use App\Api\Responses\ApiResponseInterface;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class NotFoundResponse implements ApiResponseInterface
+final class NotFoundResponse implements ApiResponseInterface
 {
     private string $message;
 

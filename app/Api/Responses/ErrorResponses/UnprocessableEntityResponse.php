@@ -10,7 +10,7 @@ use App\Api\Responses\ApiResponseInterface;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class UnprocessableEntityResponse implements ApiResponseInterface
+final class UnprocessableEntityResponse implements ApiResponseInterface
 {
     private string $message;
 

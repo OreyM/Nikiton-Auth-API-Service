@@ -12,7 +12,7 @@ use App\Domain\User\Exceptions\UserNotFoundException;
 use App\Models\User;
 use Carbon\Carbon;
 
-class BearerTokenService
+final class BearerTokenService
 {
     private ?User $authUser;
     private string $tokenName;
