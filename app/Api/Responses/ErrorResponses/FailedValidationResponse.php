@@ -15,7 +15,7 @@ class FailedValidationResponse implements ApiResponseInterface
     private string $message;
     private array $errors;
 
-    public function __construct(array $errors, string $message = 'Validation failed.')
+    public function __construct(array $errors, string $message = 'VALIDATION FAILED')
     {
         $this->message = $message;
         $this->errors = $errors;
