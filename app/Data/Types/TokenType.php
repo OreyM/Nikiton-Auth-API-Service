@@ -6,7 +6,7 @@
 
 namespace App\Data\Types;
 
-class TokenType
+final class TokenType
 {
     const BEARER = 'Bearer';
 }

@@ -11,7 +11,7 @@ use App\Domain\Auth\Entity\TokenEntity;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class LoginSuccessResponse implements ApiResponseInterface
+final class LoginSuccessResponse implements ApiResponseInterface
 {
     private TokenEntity $token;
     private string $message;

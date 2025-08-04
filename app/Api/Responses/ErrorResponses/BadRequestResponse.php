@@ -10,7 +10,7 @@ use App\Api\Responses\ApiResponseInterface;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class BadRequestResponse implements ApiResponseInterface
+final class BadRequestResponse implements ApiResponseInterface
 {
     private string $message;
 
