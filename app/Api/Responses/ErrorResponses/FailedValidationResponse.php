@@ -28,6 +28,6 @@ class FailedValidationResponse implements ApiResponseInterface
             'code'      => Response::HTTP_UNPROCESSABLE_ENTITY,
             'message'   => $this->message,
             'errors'    => $this->errors,
-        ]);
+        ], Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 }

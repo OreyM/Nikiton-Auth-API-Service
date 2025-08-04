@@ -15,7 +15,7 @@ class BadRequestResponseTest extends TestCase
 {
     public function test_respond()
     {
-        $message = 'Bad Request';
+        $message = 'Bad Request.';
 
         $response = (new BadRequestResponse($message))->respond();
         $data = json_decode($response->getContent(), true);

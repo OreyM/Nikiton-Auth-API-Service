@@ -4,7 +4,7 @@
  * @git https://github.com/OreyM
  */
 
-namespace Api\Responses\ErrorResponses;
+namespace Tests\Unit\Api\Responses\ErrorResponses;
 
 use App\Api\Responses\ErrorResponses\NotFoundResponse;
 use Illuminate\Http\JsonResponse;
