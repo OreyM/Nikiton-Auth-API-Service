@@ -11,7 +11,7 @@ use App\Models\User;
 use Mockery;
 use Tests\TestCase;
 
-class GetUserByEmailQueryTest extends TestCase
+final class GetUserByEmailQueryTest extends TestCase
 {
     protected function tearDown(): void
     {

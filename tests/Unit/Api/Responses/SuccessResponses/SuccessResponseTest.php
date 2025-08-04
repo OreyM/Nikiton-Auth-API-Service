@@ -11,7 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
-class SuccessResponseTest extends TestCase
+final class SuccessResponseTest extends TestCase
 {
     public function test_respond(): void
     {
