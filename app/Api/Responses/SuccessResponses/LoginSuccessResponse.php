@@ -16,11 +16,7 @@ class LoginSuccessResponse implements ApiResponseInterface
     private TokenEntity $token;
     private string $message;
 
-    /**
-     * @param \App\Domain\Auth\Entity\TokenEntity $token
-     * @param string $message
-     */
-    public function __construct(TokenEntity $token, string $message = 'Authentication success.')
+    public function __construct(TokenEntity $token, string $message = 'LOGIN SUCCESSFUL')
     {
         $this->token = $token;
         $this->message = $message;
