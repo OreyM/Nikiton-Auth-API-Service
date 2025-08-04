@@ -14,7 +14,7 @@ class SuccessResponse implements ApiResponseInterface
 {
     private string $message;
 
-    public function __construct(string $message = 'Success.')
+    public function __construct(string $message = 'SUCCESS')
     {
         $this->message = $message;
     }
