@@ -10,7 +10,7 @@ use App\Domain\Auth\Service\AuthService;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
-class AuthServiceTest extends TestCase
+final class AuthServiceTest extends TestCase
 {
     public function test_it_returns_true_if_the_passwords_match(): void
     {

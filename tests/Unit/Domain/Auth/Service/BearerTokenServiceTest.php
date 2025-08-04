@@ -18,7 +18,7 @@ use Mockery;
 use ReflectionClass;
 use Tests\TestCase;
 
-class BearerTokenServiceTest extends TestCase
+final class BearerTokenServiceTest extends TestCase
 {
     protected function tearDown(): void
     {

@@ -15,7 +15,7 @@ use Mockery;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
-class ApiRequestTest extends TestCase
+final class ApiRequestTest extends TestCase
 {
     protected function tearDown(): void
     {

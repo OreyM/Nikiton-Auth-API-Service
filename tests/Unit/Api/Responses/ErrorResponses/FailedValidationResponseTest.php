@@ -11,7 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
-class FailedValidationResponseTest extends TestCase
+final class FailedValidationResponseTest extends TestCase
 {
     public function test_responde(): void
     {
