@@ -6,12 +6,10 @@
 
 namespace App\Http\Controllers\Auth\Api\V1;
 
-use App\Api\Responses\ErrorResponses\NotFoundResponse;
 use App\Api\Responses\ErrorResponses\UnprocessableEntityResponse;
 use App\Api\Responses\SuccessResponses\LoginSuccessResponse;
 use App\Domain\Auth\Service\AuthService;
 use App\Domain\Auth\Service\BearerTokenService;
-use App\Domain\User\Exceptions\UserNotFoundException;
 use App\Domain\User\Queries\GetUserByEmailQuery;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\Auth\LoginApiRequest;
