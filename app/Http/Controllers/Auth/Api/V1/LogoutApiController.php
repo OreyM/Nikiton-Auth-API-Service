@@ -4,7 +4,7 @@
  * @git https://github.com/OreyM
  */
 
-namespace App\Http\Controllers\Auth\Api;
+namespace App\Http\Controllers\Auth\Api\V1;
 
 use App\Api\Responses\ErrorResponses\BadRequestResponse;
 use App\Api\Responses\SuccessResponses\SuccessResponse;
@@ -12,7 +12,6 @@ use App\Http\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Laravel\Passport\AccessToken;
-
 use OpenApi\Attributes\JsonContent;
 use OpenApi\Attributes\Parameter;
 use OpenApi\Attributes\Post;

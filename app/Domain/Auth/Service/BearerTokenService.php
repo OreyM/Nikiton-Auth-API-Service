@@ -11,6 +11,7 @@ use App\Domain\Auth\Entity\TokenEntity;
 use App\Domain\User\Exceptions\UserNotFoundException;
 use App\Models\User;
 use Carbon\Carbon;
+use Laravel\Passport\PersonalAccessTokenResult;
 
 final class BearerTokenService
 {
@@ -51,7 +52,7 @@ final class BearerTokenService
     /**
      * @return \App\Domain\Auth\Entity\TokenEntity
      *
-     * @throws UserNotFoundException
+     * @throws \App\Domain\User\Exceptions\UserNotFoundException
      */
     public function generateToken(): TokenEntity
     {
