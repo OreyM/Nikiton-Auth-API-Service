@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('/auth')
     ->as('auth.')
     ->group(function () {
-        Route::post('/login', LoginApiController::class)->name('login');
+        Route::post('/login', LoginApiController::class)->name('login')
+            ->middleware('throttle:5,1');;
 
         Route::middleware(['auth:api'])
             ->group(function () {
