@@ -16,7 +16,7 @@ use Laravel\Passport\HasApiTokens;
  * @property string $email
  * @property string $password
  */
-final class User extends Authenticatable implements OAuthenticatable
+class User extends Authenticatable implements OAuthenticatable
 {
     use HasApiTokens;
     /** @use HasFactory<\Database\Factories\UserFactory> */

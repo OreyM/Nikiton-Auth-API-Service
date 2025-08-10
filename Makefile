@@ -10,3 +10,7 @@ tests:
 
 tests\:coverage:
 	vendor/bin/phpunit --testdox --colors --stop-on-failure --coverage-html=tests/coverage
+tests\:feature:
+	php artisan test --parallel --recreate-databases --testsuite=Feature --testdox --colors --stop-on-failure
+test\:all:
+	php artisan test --parallel --recreate-databases

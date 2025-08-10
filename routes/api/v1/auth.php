@@ -4,8 +4,8 @@
  * @git https://github.com/OreyM
  */
 
-use App\Http\Controllers\Auth\Api\LoginApiController;
-use App\Http\Controllers\Auth\Api\LogoutApiController;
+use App\Http\Controllers\Auth\Api\V1\LoginApiController;
+use App\Http\Controllers\Auth\Api\V1\LogoutApiController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('/auth')

@@ -4,7 +4,7 @@
  * @git https://github.com/OreyM
  */
 
-namespace App\Http\Controllers\Auth\Api;
+namespace App\Http\Controllers\Auth\Api\V1;
 
 use App\Api\Responses\ErrorResponses\NotFoundResponse;
 use App\Api\Responses\ErrorResponses\UnprocessableEntityResponse;
@@ -16,12 +16,11 @@ use App\Domain\User\Queries\GetUserByEmailQuery;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\Auth\LoginApiRequest;
 use Illuminate\Http\JsonResponse;
-
 use OpenApi\Attributes\JsonContent;
+use OpenApi\Attributes\Post;
 use OpenApi\Attributes\Property;
 use OpenApi\Attributes\RequestBody;
 use OpenApi\Attributes\Response;
-use OpenApi\Attributes\Post;
 use OpenApi\Attributes\Tag;
 
 #[Tag(name: 'Auth', description: 'Authentication API routes')]
@@ -95,11 +94,12 @@ final class LoginApiController extends ApiController
             ),
         ]
     )]
-
     /**
      * @param \App\Http\Requests\Auth\LoginApiRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
+     *
+     * @throws \App\Domain\User\Exceptions\UserNotFoundException
      */
     public function __invoke(LoginApiRequest $request): JsonResponse
     {
@@ -115,16 +115,10 @@ final class LoginApiController extends ApiController
             ))->respond();
         }
 
-        try {
-            $token = $this->tokenService
-                ->setAuthUser($authUser)
-                ->setTokenName('Nikiton API token') // TODO remove to .env or other place
-                ->generateToken();
-        } catch (UserNotFoundException $e) {
-            return (new NotFoundResponse(
-                message: $e->getMessage()
-            ))->respond();
-        }
+        $token = $this->tokenService
+            ->setAuthUser($authUser)
+            ->setTokenName('Nikiton API token') // TODO remove to .env or other place
+            ->generateToken();
 
         return (new LoginSuccessResponse(
             token: $token,
