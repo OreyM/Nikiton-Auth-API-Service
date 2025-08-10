@@ -34,7 +34,9 @@ return Application::configure(basePath: dirname(__DIR__))
             return response()->json([
                 'success'   => false,
                 'code'      => Response::HTTP_TOO_MANY_REQUESTS,
-                'message'   => trans('auth.throttle', ['seconds' => 60])
+                'message'   => trans('auth.throttle', [
+                    'seconds' => config('auth.passwords.users.throttle')
+                ])
             ], Response::HTTP_TOO_MANY_REQUESTS);
         });
     })

@@ -82,4 +82,31 @@ final class LoginApiControllerTest extends FeatureTestCase
                 'message'   => trans('auth.failed'),
             ]);
     }
+
+    #[Test]
+    public function authentication_blocking_when_attempts_limit_is_exhausted(): void
+    {
+        $maxAttempts = 5;
+
+        foreach (range(1, $maxAttempts) as $i) {
+            $this->postJson($this->loginApiUri, [
+                'email'     => 'user_test@mail.com',
+                'password'  => 'wrong_password',
+            ]);
+        }
+
+        $response = $this->postJson($this->loginApiUri, [
+            'email'     => 'user_test@mail.com',
+            'password'  => 'wrong_password',
+        ]);
+
+        $response->assertStatus(Response::HTTP_TOO_MANY_REQUESTS)
+            ->assertJson([
+                'success'   => false,
+                'code'      => Response::HTTP_TOO_MANY_REQUESTS,
+                'message'   => trans('auth.throttle', [
+                    'seconds' => config('auth.passwords.users.throttle')
+                ]),
+            ]);
+    }
 }
