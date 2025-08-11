@@ -1,5 +1,6 @@
 <?php
 
+use App\Api\Responses\ErrorResponses\UnauthorizedResponse;
 use App\Api\Responses\ErrorResponses\UnprocessableEntityResponse;
 use App\Domain\Auth\Exceptions\AuthFailedException;
 use App\Http\Middleware\ApiForceJsonResponse;
@@ -25,11 +26,9 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (AuthenticationException $e, Request $request) {
-            return response()->json([
-                'success'   => false,
-                'code'      => Response::HTTP_UNAUTHORIZED,
-                'message'   => trans('auth.unauthenticated')
-            ], Response::HTTP_UNAUTHORIZED);
+            return (new UnauthorizedResponse(
+                message: trans('auth.unauthenticated')
+            ))->respond();
         });
 
         $exceptions->render(function (AuthFailedException $e, Request $request) {
