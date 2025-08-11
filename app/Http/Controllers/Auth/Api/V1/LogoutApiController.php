@@ -6,12 +6,12 @@
 
 namespace App\Http\Controllers\Auth\Api\V1;
 
+use App\Actions\Action;
+use App\Actions\Auth\LogoutAuthUserAction;
 use App\Api\Responses\ErrorResponses\BadRequestResponse;
 use App\Api\Responses\SuccessResponses\SuccessResponse;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Laravel\Passport\AccessToken;
 use OpenApi\Attributes\JsonContent;
 use OpenApi\Attributes\Parameter;
 use OpenApi\Attributes\Post;
@@ -69,17 +69,12 @@ final class LogoutApiController extends ApiController
         ]
     )]
 
-    /**
-     * @param Request $request
-     *
+    /***
      * @return \Illuminate\Http\JsonResponse
      */
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(): JsonResponse
     {
-        /** @var AccessToken  $token */
-        $token = $request->user()->token();
-
-        if (! $token->revoke()) {
+        if (! Action::call(LogoutAuthUserAction::class)->run()) {
             return (new BadRequestResponse(
                 message: trans('auth.logout_error')
             ))->respond();
