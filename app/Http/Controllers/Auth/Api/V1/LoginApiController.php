@@ -75,7 +75,7 @@ final class LoginApiController extends ApiController
             ),
         ]
     )]
-    /***
+    /**
      * @return \Illuminate\Http\JsonResponse
      */
     public function __invoke(): JsonResponse
