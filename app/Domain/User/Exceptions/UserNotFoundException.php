@@ -8,11 +8,13 @@ namespace App\Domain\User\Exceptions;
 
 class UserNotFoundException extends \Exception
 {
-    public function __construct(string $message = "", int $code = 0, ?\Throwable $previous = null)
+    public function __construct(
+        string $message = '',
+        int $code = 0,
+        ?\Throwable $previous = null
+    )
     {
-        if (empty($message)) {
-            $message = "User was not found.";
-        }
+        $message = $message ?: trans('User was not found.');
 
         parent::__construct($message, $code, $previous);
     }

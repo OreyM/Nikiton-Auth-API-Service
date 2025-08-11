@@ -9,7 +9,7 @@ namespace App\Domain\User\Queries;
 use App\Domain\User\Exceptions\UserNotFoundException;
 use App\Models\User;
 
-class GetUserByEmailQuery
+final class GetUserByEmailQuery
 {
     private User $user;
 

@@ -11,7 +11,6 @@ use App\Domain\Auth\Entity\TokenEntity;
 use App\Domain\User\Exceptions\UserNotFoundException;
 use App\Models\User;
 use Carbon\Carbon;
-use Laravel\Passport\PersonalAccessTokenResult;
 
 final class BearerTokenService
 {
@@ -24,6 +23,11 @@ final class BearerTokenService
         $this->tokenName = 'API';
     }
 
+    /**
+     * @param \App\Models\User $authUser
+     *
+     * @return $this
+     */
     public function setAuthUser(User $authUser): self
     {
         $this->authUser = $authUser;
@@ -31,6 +35,9 @@ final class BearerTokenService
         return $this;
     }
 
+    /**
+     * @return \App\Models\User
+     */
     public function getAuthUser(): User
     {
         return $this->authUser;
