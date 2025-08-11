@@ -7,11 +7,12 @@
 namespace App\Http\Controllers\Auth\Api\V1;
 
 use App\Actions\Action;
-use App\Actions\Auth\LogoutAuthUserAction;
 use App\Api\Responses\ErrorResponses\BadRequestResponse;
 use App\Api\Responses\SuccessResponses\SuccessResponse;
+use App\Domain\Auth\Actions\LogoutAuthUserAction;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
+
 use OpenApi\Attributes\JsonContent;
 use OpenApi\Attributes\Parameter;
 use OpenApi\Attributes\Post;

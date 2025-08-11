@@ -1,5 +1,7 @@
 <?php
 
+use App\Api\Responses\ErrorResponses\UnprocessableEntityResponse;
+use App\Domain\Auth\Exceptions\AuthFailedException;
 use App\Http\Middleware\ApiForceJsonResponse;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
@@ -28,6 +30,12 @@ return Application::configure(basePath: dirname(__DIR__))
                 'code'      => Response::HTTP_UNAUTHORIZED,
                 'message'   => trans('auth.unauthenticated')
             ], Response::HTTP_UNAUTHORIZED);
+        });
+
+        $exceptions->render(function (AuthFailedException $e, Request $request) {
+            return (new UnprocessableEntityResponse(
+                message: $e->getMessage()
+            ))->respond();
         });
 
         $exceptions->render(function (ThrottleRequestsException $e, Request $request) {

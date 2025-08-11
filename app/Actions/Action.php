@@ -6,7 +6,7 @@ abstract class Action
 {
     protected static Action $instance;
 
-    abstract protected function handle(): mixed;
+    abstract protected function handle();
 
     public static function call($class): static
     {

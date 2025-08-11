@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Actions\Auth;
+namespace App\Domain\Auth\Actions;
 
 use App\Actions\Action;
 use Illuminate\Http\Request;
 use Laravel\Passport\AccessToken;
 
-class LogoutAuthUserAction extends Action
+final class LogoutAuthUserAction extends Action
 {
     private Request $request;
 
