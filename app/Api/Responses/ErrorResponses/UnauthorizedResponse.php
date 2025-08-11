@@ -6,7 +6,7 @@ use App\Api\Responses\ApiResponseInterface;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class UnauthorizedResponse implements ApiResponseInterface
+final class UnauthorizedResponse implements ApiResponseInterface
 {
     private string $message;
 
