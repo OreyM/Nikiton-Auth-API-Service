@@ -25,6 +25,8 @@
         "laravel/sail": "^1.41",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
+        "nunomaduro/larastan": "^3.6",
+        "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^11.5.3"
     },
     "autoload": {
@@ -74,8 +76,9 @@
         "test:feature": [
             "@php artisan config:clear --ansi",
             "php artisan test --parallel --recreate-databases --testsuite=Feature --testdox --colors --stop-on-failure"
-        ]
-    },
+        ],
+        "phpstan": "phpstan analyse",
+        "phpstan:changed": "phpstan analyse $(git diff --name-only --diff-filter=ACMRTUXB HEAD | grep '^app/' || echo app)"    },
     "extra": {
         "laravel": {
             "dont-discover": []
