@@ -1,5 +1,9 @@
 <?php
 
+use App\Api\Responses\ErrorResponses\TooManyRequestsResponse;
+use App\Api\Responses\ErrorResponses\UnauthorizedResponse;
+use App\Api\Responses\ErrorResponses\UnprocessableEntityResponse;
+use App\Domain\Auth\Exceptions\AuthFailedException;
 use App\Http\Middleware\ApiForceJsonResponse;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
@@ -23,21 +27,24 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (AuthenticationException $e, Request $request) {
-            return response()->json([
-                'success'   => false,
-                'code'      => Response::HTTP_UNAUTHORIZED,
-                'message'   => trans('auth.unauthenticated')
-            ], Response::HTTP_UNAUTHORIZED);
+            return (new UnauthorizedResponse(
+                message: trans('auth.unauthenticated')
+            ))->respond();
+        });
+
+        $exceptions->render(function (AuthFailedException $e, Request $request) {
+            return (new UnprocessableEntityResponse(
+                message: $e->getMessage()
+            ))->respond();
         });
 
         $exceptions->render(function (ThrottleRequestsException $e, Request $request) {
-            return response()->json([
-                'success'   => false,
-                'code'      => Response::HTTP_TOO_MANY_REQUESTS,
-                'message'   => trans('auth.throttle', [
+            // make universal
+            return (new TooManyRequestsResponse(
+                message: trans('auth.throttle', [
                     'seconds' => config('auth.passwords.users.throttle')
                 ])
-            ], Response::HTTP_TOO_MANY_REQUESTS);
+            ))->respond();
         });
     })
     ->create();

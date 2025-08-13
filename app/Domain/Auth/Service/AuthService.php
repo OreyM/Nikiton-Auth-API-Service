@@ -10,6 +10,6 @@ final class AuthService
 {
     public function comparePasswords(string $password, string $hashedPassword): bool
     {
-        return password_verify($password, $hashedPassword);
+        return \password_verify($password, $hashedPassword);
     }
 }

@@ -6,14 +6,12 @@
 
 namespace App\Http\Controllers\Auth\Api\V1;
 
-use App\Api\Responses\ErrorResponses\UnprocessableEntityResponse;
+use App\Actions\Action;
 use App\Api\Responses\SuccessResponses\LoginSuccessResponse;
-use App\Domain\Auth\Service\AuthService;
-use App\Domain\Auth\Service\BearerTokenService;
-use App\Domain\User\Queries\GetUserByEmailQuery;
+use App\Domain\Auth\Actions\LoginUserAction;
 use App\Http\Controllers\ApiController;
-use App\Http\Requests\Auth\LoginApiRequest;
 use Illuminate\Http\JsonResponse;
+
 use OpenApi\Attributes\JsonContent;
 use OpenApi\Attributes\Post;
 use OpenApi\Attributes\Property;
@@ -24,21 +22,6 @@ use OpenApi\Attributes\Tag;
 #[Tag(name: 'Auth', description: 'Authentication API routes')]
 final class LoginApiController extends ApiController
 {
-    private AuthService $authService;
-    private BearerTokenService $tokenService;
-    private GetUserByEmailQuery $getUserByEmailQuery;
-
-    public function __construct(
-        AuthService $authService,
-        BearerTokenService $tokenService,
-        GetUserByEmailQuery $getUserByEmailQuery
-    )
-    {
-        $this->authService = $authService;
-        $this->tokenService = $tokenService;
-        $this->getUserByEmailQuery = $getUserByEmailQuery;
-    }
-
     #[Post(
         path: '/api/v1/auth/login',
         operationId: 'loginUser',
@@ -93,30 +76,11 @@ final class LoginApiController extends ApiController
         ]
     )]
     /**
-     * @param \App\Http\Requests\Auth\LoginApiRequest $request
-     *
      * @return \Illuminate\Http\JsonResponse
-     *
-     * @throws \App\Domain\User\Exceptions\UserNotFoundException
      */
-    public function __invoke(LoginApiRequest $request): JsonResponse
+    public function __invoke(): JsonResponse
     {
-        if (!$authUser = $this->getUserByEmailQuery->handle($request->email)) {
-            return (new UnprocessableEntityResponse(
-                message: trans('auth.failed')
-            ))->respond();
-        }
-
-        if (!$this->authService->comparePasswords(urldecode($request->password), $authUser->password)) {
-            return (new UnprocessableEntityResponse(
-                message: trans('auth.failed')
-            ))->respond();
-        }
-
-        $token = $this->tokenService
-            ->setAuthUser($authUser)
-            ->setTokenName('Nikiton API token') // TODO remove to .env or other place
-            ->generateToken();
+        $token = Action::call(LoginUserAction::class)->run();
 
         return (new LoginSuccessResponse(
             token: $token,
